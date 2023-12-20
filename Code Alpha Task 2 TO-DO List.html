@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #7812ed, #ee880b); /* Gradient background with two colors */
+      color: #fff; /* White text color */
+      margin: 0;
+      padding: 0;
+    }
+
+    #taskInput, #deadlineInput, #timeInput, #taskList {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #333; /* Dark gray background for inputs and list */
+      border: 1px solid #414040; /* Slightly darker gray border */
+      color: #fff; /* White text color for inputs and list */
+      width: 300px;
+      display: inline-block;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 16px;
+      background-color: #4caf50; /* Green button background color */
+      color: #fff; /* White text color */
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049; /* Slightly darker green on hover */
+    }
+
+    li {
+      list-style: none;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 style="color: #2196F3;">To-Do List</h1>
+
+  <label for="taskInput">Task:</label>
+  <input type="text" id="taskInput" placeholder="Enter task" required>
+  <br>
+
+  <label for="deadlineInput">Deadline:</label>
+  <input type="date" id="deadlineInput">
+  <br>
+
+  <label for="timeInput">Time:</label>
+  <input type="time" id="timeInput">
+  <br>
+
+  <button onclick="addTask()">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    function addTask() {
+      var taskInput = document.getElementById("taskInput").value;
+      var deadlineInput = document.getElementById("deadlineInput").value;
+      var timeInput = document.getElementById("timeInput").value;
+
+      if (taskInput.trim() === "") {
+        alert("Please enter a task.");
+        return;
+      }
+
+      var taskList = document.getElementById("taskList");
+
+      var li = document.createElement("li");
+      var taskText = taskInput + " - Deadline: " + deadlineInput + " " + (timeInput ? "Time: " + timeInput : "");
+
+      li.innerHTML = taskText;
+
+      var removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.onclick = function() {
+        li.parentNode.removeChild(li);
+      };
+
+      li.appendChild(removeButton);
+      taskList.appendChild(li);
+
+      // Sort tasks by deadline (date and time)
+      var listItems = Array.from(taskList.getElementsByTagName("li"));
+      listItems.sort(function(a, b) {
+        var datetimeA = new Date(a.textContent.split("Deadline: ")[1] + " " + a.textContent.split("Time: ")[1]);
+        var datetimeB = new Date(b.textContent.split("Deadline: ")[1] + " " + b.textContent.split("Time: ")[1]);
+        return datetimeA - datetimeB;
+      });
+
+      // Update the task list with the sorted order
+      taskList.innerHTML = "";
+      listItems.forEach(function(item) {
+        taskList.appendChild(item);
+      });
+
+      // Clear input fields
+      document.getElementById("taskInput").value = "";
+      document.getElementById("deadlineInput").value = "";
+      document.getElementById("timeInput").value = "";
+    }
+  </script>
+
+</body>
+</html>
